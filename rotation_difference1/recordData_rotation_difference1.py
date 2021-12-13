@@ -26,7 +26,7 @@ EXPERIMENT_ID = "rotation_difference1"
 
 time_now = datetime.now()
 
-print(time_now)
+print("Current time:", time_now)
 
 ticksToSend =  NUMBER_OF_ROTATIONS * TICKS_PER_ROTATION_DIV
 
@@ -83,10 +83,9 @@ def main():
     
     rate = rospy.Rate(600)
 
-    print(ticksToSend)
 
     print("Press return every rotation.")
-    print("Input s to stop the data collection.")
+    print("Input s to stop the data collection. Does NOT increase the rotation count!")
     print("Press return to verify and start")
     input()
     print("START")
@@ -96,34 +95,14 @@ def main():
     pub.publish(cmd)
     
     while 1:
+        print("Press return to incerease rotation count")
         stop = input()
-        print(totalRotations)
         if stop == 's':
-            print("Type y to save.")
-            userInput = input()
-            if userInput == 'y':
-                newFile = True
-                try:
-                    f = open(EXPERIMENT_ID + ".csv", 'x')
-                    print("create file")
-                except:
-                    print("Append to existing file")
-                    newFile = False
-                with open(EXPERIMENT_ID + ".csv", 'a') as f: 
-                    write = csv.writer(f)
-                    if newFile: 
-                        write.writerow(readValuesLabel) 
-                    write.writerows(readValues)
-                print("SAVED")
-                print(totalRotations)
-                return
-            else:
-                print("Are you sure? yes to abort!")
+            print("Number of rotations counted:",totalRotations)
+            while(1):
+                print("Type y to save.")
                 userInput = input()
-                if(userInput == "yes"):
-                    print("ABORT")
-                    return
-                else:
+                if userInput == 'y':
                     newFile = True
                     try:
                         f = open(EXPERIMENT_ID + ".csv", 'x')
@@ -137,9 +116,16 @@ def main():
                             write.writerow(readValuesLabel) 
                         write.writerows(readValues)
                     print("SAVED")
-                    print(totalRotations)
                     return
+                else:
+                    print("You want to throw away the data?!")
+                    print("Are you sure? yes to abort!")
+                    userInput = input()
+                    if(userInput == "yes"):
+                        print("ABORT")
+                        return
         totalRotations = totalRotations + 1
+        print("Current number of rotations:",totalRotations)
 
 if __name__ == '__main__':
 
