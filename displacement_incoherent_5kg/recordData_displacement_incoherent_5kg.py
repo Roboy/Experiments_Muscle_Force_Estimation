@@ -95,6 +95,8 @@ STEP_ROTATIONS = 2.5
 
 TICKS_PER_ROTATION = 4096
 
+MOTOR_H_ID = 0
+
 WAIT_TIME = 20
 
 WEIGHT = 5
@@ -106,7 +108,8 @@ readValuesLabel = [ "protocol",
                     "timestamp",
                     "encoder0_scaled_old",
                     "encoder1_scaled_old",
-                    "displacement_old"]
+                    "displacement_old",
+                    "loadcell_force"]
 
 readValues = []
 
@@ -118,13 +121,13 @@ writtenSetpoinits = []
 loadcellforce = 0
 
 #creat protocol label
-protocol = "lengthControl_"+str(MAX_ROTATIONS)+"maxRotations_"+str(STEP_ROTATIONS)+"stepRotationd_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
+protocol = "lengthControl_"+ str(MOTOR_H_ID) + "motorHardwareID_" + str(MAX_ROTATIONS)+"maxRotations_"+str(STEP_ROTATIONS)+"stepRotationd_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
 
 #define subscriber callback to append data to readValues
 def callback(data):
     #read data from load cell
     loadcellforce = channels[0].readForce()
-    readValues.append([protocol,time_now,str(datetime.now()),data.encoder0_pos[MOTOR_NUM],data.encoder1_pos[MOTOR_NUM],data.displacement[MOTOR_NUM]])
+    readValues.append([protocol,time_now,str(datetime.now()),data.encoder0_pos[MOTOR_NUM],data.encoder1_pos[MOTOR_NUM],data.displacement[MOTOR_NUM],loadcellforce])
 
 
 #load cell parameters
