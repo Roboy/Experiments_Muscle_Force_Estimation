@@ -89,9 +89,11 @@ EXPERIMENT_ID = "displacement_incoherent_5kg"
 
 MOTOR_NUM = 7
 
-STEP_SIZE = 0.03
+STEP_ROTATIONS = 2.5
 
-MAX_DISTANCE = 0.1801
+MAX_ROTATIONS = 15
+
+TICKS_PER_ROTATION = 4096
 
 WAIT_TIME = 20
 
@@ -116,7 +118,7 @@ writtenSetpoinits = []
 loadcellforce = 0
 
 #creat protocol label
-protocol = "lengthControl_"+str(MAX_DISTANCE)+"m_maxDistance_"+str(STEP_SIZE)+"m_stepSize_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
+protocol = "lengthControl_"+str(MAX_ROTATIONS)+"maxRotations_"+str(STEP_ROTATIONS)+"stepRotationd_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
 
 #define subscriber callback to append data to readValues
 def callback(data):
@@ -139,7 +141,7 @@ def main():
     pub = rospy.Publisher('/roboy/pinky/middleware/MotorCommand', MotorCommand, queue_size=1)
     sub = rospy.Subscriber('/roboy/pinky/middleware/MotorState',MotorState, callback)
 
-    setpoints = np.arange(0, MAX_DISTANCE, STEP_SIZE)
+    setpoints = np.arange(0, MAX_ROTATIONS*TICKS_PER_ROTATION + 1, STEP_ROTATIONS*TICKS_PER_ROTATION)
     cmd = MotorCommand()
     cmd.global_id = [MOTOR_NUM]
 
