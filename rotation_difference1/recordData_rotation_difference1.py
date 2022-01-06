@@ -24,6 +24,8 @@ PWM_LIMIT = 3
 
 EXPERIMENT_ID = "rotation_difference1"
 
+DT_THRESHHOLD = 0.5
+
 time_now = datetime.now()
 
 print("Current time:", time_now)
@@ -32,6 +34,7 @@ ticksToSend =  NUMBER_OF_ROTATIONS * TICKS_PER_ROTATION_DIV
 
 readValuesLabel = [ "protocol",
                     "starttime",
+                    "timestamp",
                     "encoder0_scaled_old",
                     "encoder1_scaled_old",
                     "total_rotations"]
@@ -40,14 +43,14 @@ totalRotations = 0
 
 readValues = []
 
-cmd = MotorCommand()
+cmd = MotorCommand()    
 cmd.global_id = [MOTOR_NUM]
 
 pub = rospy.Publisher('/roboy/pinky/middleware/MotorCommand', MotorCommand, queue_size=1)
 protocol = "lengthControl_pwmLimit"+str(PWM_LIMIT)+"_"+str(NUMBER_OF_ROTATIONS)+"rotations_"+str(WEIGHT) + "kg_weight"
 
 def callback(data):
-    readValues.append([protocol,time_now,data.encoder0_pos[MOTOR_NUM],data.encoder1_pos[MOTOR_NUM],totalRotations])
+    readValues.append([protocol,time_now,str(datetime.now()),data.encoder0_pos[MOTOR_NUM],data.encoder1_pos[MOTOR_NUM],totalRotations])
 
 def main():
     rospy.init_node("experimant_fpga_division_impact0")
@@ -82,7 +85,7 @@ def main():
     sub = rospy.Subscriber('/roboy/pinky/middleware/MotorState',MotorState, callback)
     
     rate = rospy.Rate(600)
-
+    t1 = datetime.now()
 
     print("Press return every rotation.")
     print("Input s to stop the data collection. Does NOT increase the rotation count!")
@@ -97,6 +100,10 @@ def main():
     while 1:
         print("Press return to incerease rotation count")
         stop = input()
+        
+        if((datetime.now()-t1).total_seconds() < DT_THRESHHOLD):
+            continue
+
         if stop == 's':
             print("Number of rotations counted:",totalRotations)
             while(1):
@@ -121,9 +128,13 @@ def main():
                     print("You want to throw away the data?!")
                     print("Are you sure? yes to abort!")
                     userInput = input()
+                    sleep(0.2)
+                    
                     if(userInput == "yes"):
                         print("ABORT")
                         return
+
+        t1 = datetime.now()
         totalRotations = totalRotations + 1
         print("Current number of rotations:",totalRotations)
 

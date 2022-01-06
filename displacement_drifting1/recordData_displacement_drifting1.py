@@ -20,7 +20,7 @@ WEIGHT = 0
 
 MOTOR_H_ID = 3
 
-PWM = 3
+PWM = 2
 
 TOTAL_TIME = 120
 

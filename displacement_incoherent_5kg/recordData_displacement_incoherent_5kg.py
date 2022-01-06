@@ -89,17 +89,18 @@ EXPERIMENT_ID = "displacement_incoherent_5kg"
 
 MOTOR_NUM = 7
 
-MAX_ROTATIONS = 15
+MAX_ROTATIONS = 10
 
-STEP_ROTATIONS = 2.5
+STEP_ROTATIONS = MAX_ROTATIONS
+#STEP_ROTATIONS = 2.5
 
 TICKS_PER_ROTATION = 4096
 
-MOTOR_H_ID = 0
+MOTOR_H_ID = 3
 
 WAIT_TIME = 20
 
-WEIGHT = 5
+WEIGHT = 10
 
 time_now = datetime.now()
 
@@ -121,8 +122,8 @@ writtenSetpoinits = []
 loadcellforce = 0
 
 #creat protocol label
-protocol = "lengthControl_"+ str(MOTOR_H_ID) + "motorHardwareID_" + str(MAX_ROTATIONS)+"maxRotations_"+str(STEP_ROTATIONS)+"stepRotationd_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
-
+protocol = "lengthControl_"+ str(MOTOR_H_ID) + "motorHardwareID_" + str(MAX_ROTATIONS)+"maxRotations_"+str(STEP_ROTATIONS)+"stepRotations_"+str(WAIT_TIME)+"s_waitTime_"+str(WEIGHT)+"kg_weight"
+print(protocol)
 #define subscriber callback to append data to readValues
 def callback(data):
     #read data from load cell
