@@ -22,9 +22,11 @@ WEIGHT = 0
 
 PWM_LIMIT = 3
 
-EXPERIMENT_ID = "rotation_difference1"
+EXPERIMENT_ID = "rotation_difference2"
 
 DT_THRESHHOLD = 0.5
+
+MOTOR_H_ID = 1
 
 time_now = datetime.now()
 
@@ -47,7 +49,7 @@ cmd = MotorCommand()
 cmd.global_id = [MOTOR_NUM]
 
 pub = rospy.Publisher('/roboy/pinky/middleware/MotorCommand', MotorCommand, queue_size=1)
-protocol = "lengthControl_pwmLimit"+str(PWM_LIMIT)+"_"+str(NUMBER_OF_ROTATIONS)+"rotations_"+str(WEIGHT) + "kg_weight"
+protocol = "lengthControl_pwmLimit"+str(PWM_LIMIT)+"_"+str(NUMBER_OF_ROTATIONS)+"rotations_"+ str(MOTOR_H_ID) + "motorHardwareID_" +str(WEIGHT) + "kg_weight"
 
 def callback(data):
     readValues.append([protocol,time_now,str(datetime.now()),data.encoder0_pos[MOTOR_NUM],data.encoder1_pos[MOTOR_NUM],totalRotations])
